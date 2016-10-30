@@ -1,5 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="32dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerVertical="true"
+        android:src="@mipmap/abc"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/profile_image"
+        android:paddingStart="10dp">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="果果木"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/charm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name"
+            android:text="魅力"
+            />
+
+        <TextView
+            android:id="@+id/charm_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name"
+            android:layout_toEndOf="@+id/charm"
+            android:text="9999"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/charm"
+            android:text="这位美女是我们此次排行榜的冠军哦! 赶紧去预约她吧..."
+            />
+
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/rl_information"
+        android:layout_marginTop="10dp"
+        android:text="预约"
+        />
+
+</RelativeLayout>
