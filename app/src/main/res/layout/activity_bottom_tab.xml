@@ -5,9 +5,9 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <!--<include-->
-        <!--android:id="@+id/appbar"-->
-        <!--layout="@layout/include_toolbar" />-->
+    <include
+        android:id="@+id/appbar"
+        layout="@layout/include_toolbar" />
 
 
     <LinearLayout

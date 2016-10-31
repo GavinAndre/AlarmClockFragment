@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import static android.R.attr.tag;
@@ -36,26 +38,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bottom_tab);
 
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.title_buttom_tab);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });*/
-
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 
         SampleFragmentPagerAdapter pagerAdapter =
                 new SampleFragmentPagerAdapter(getSupportFragmentManager(), this);
 
+        pagerAdapter.addFragment(new AlarmClockFragment());
+        pagerAdapter.addFragment(new Fragment2());
+        pagerAdapter.addFragment(new Fragment2());
+
         viewPager.setAdapter(pagerAdapter);
 
+        viewPager.setOffscreenPageLimit(2);
 
         tabLayout.setupWithViewPager(viewPager);
 
@@ -72,10 +67,15 @@ public class MainActivity extends AppCompatActivity {
 
 
     public class SampleFragmentPagerAdapter extends FragmentPagerAdapter {
+        private final String TAG = SampleFragmentPagerAdapter.class.getSimpleName();
         final int PAGE_COUNT = 3;
+        private final List<Fragment> mFragments = new ArrayList<>();
         private String tabTitles[] = new String[]{"TAB1", "TAB2", "TAB3"};
         private Context context;
 
+        public void addFragment(Fragment fragment) {
+            mFragments.add(fragment);
+        }
 
         public View getTabView(int position) {
             View v = LayoutInflater.from(context).inflate(R.layout.custom_tab, null);
@@ -93,12 +93,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return PAGE_COUNT;
+            return mFragments.size();
         }
 
         @Override
         public Fragment getItem(int position) {
-            return AlarmClockFragment.newInstance(position + 1);
+            return mFragments.get(position);
         }
 
         @Override

@@ -1,8 +1,13 @@
 package com.example.alarmclockfragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -12,6 +17,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +37,15 @@ import java.util.Scanner;
 
 public class AlarmClockFragment extends Fragment {
 
+    private static final String TAG = AlarmClockFragment.class.getSimpleName();
     private ViewPager mViewPager, mBanner;
     private int mPage;
     public static final String ARG_PAGE = "ARG_PAGE";
-    private boolean fabOpened;
+    private boolean fabOpened, isAnimationEnd = true;
     private View maskView;
     private FloatingActionButton fabAddClock, fabNormalClock, fabCustomClock;
+    private CircleIndicator mCircleIndicator;
+    private Handler handler = new Handler();
 
     public static AlarmClockFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -49,32 +58,24 @@ public class AlarmClockFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
+//        mPage = getArguments().getInt(ARG_PAGE,0);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_main, null);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        setHasOptionsMenu(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "toolbar", Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        View view = inflater.inflate(R.layout.activity_main, container, false);
 
         fabAddClock = (FloatingActionButton) view.findViewById(R.id.fab_add_clock);
         fabAddClock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!fabOpened) {
-                    openMenu(view);
-                } else {
-                    closeMenu(view);
+                if (isAnimationEnd) {
+                    if (!fabOpened) {
+                        openMenu(view);
+                    } else {
+                        closeMenu(view);
+                    }
                 }
             }
         });
@@ -91,71 +92,121 @@ public class AlarmClockFragment extends Fragment {
 
 //        ImageView ivImage = (ImageView) view.findViewById(R.id.ivImage);
 //        ivImage.setImageResource(R.mipmap.book3);
-
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mBanner = (ViewPager) view.findViewById(R.id.banner);
         setupViewPager(mViewPager);
         setupBanner(mBanner);
+
+        mCircleIndicator = (CircleIndicator) view.findViewById(R.id.pager_indicator);
+        mCircleIndicator.setViewPager(mBanner);
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(mViewPager);
         return view;
     }
 
-    private void closeMenu(View view) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "rotation", -135, 20, 0);
-        animator.setDuration(500);
-        animator.start();
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0.8f, 0);
-        alphaAnimation.setDuration(500);
-        maskView.startAnimation(alphaAnimation);
-        maskView.setVisibility(View.GONE);
-
-        fabNormalClock.hide();
-        fabCustomClock.hide();
-
-        fabOpened = false;
-    }
-
     private void openMenu(View view) {
-        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "rotation", 0, -155, -135);
-        animator.setDuration(500);
-        animator.start();
+        isAnimationEnd = false;
+        ObjectAnimator animator1 = ObjectAnimator.ofFloat(view, "rotation", 0, -155, -135);
+        ObjectAnimator animator2 = ObjectAnimator.ofFloat(view, "scaleX", 1f, 0.65f);
+        ObjectAnimator animator3 = ObjectAnimator.ofFloat(view, "scaleY", 1f, 0.65f);
+        AnimatorSet set = new AnimatorSet();
+        set.setDuration(500);
+        set.playTogether(animator1, animator2, animator3);
+        set.start();
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                isAnimationEnd = true;
+            }
+        });
         maskView.setVisibility(View.VISIBLE);
         AlphaAnimation alphaAnimation = new AlphaAnimation(0, 0.8f);
         alphaAnimation.setDuration(500);
         alphaAnimation.setFillAfter(true);
         maskView.startAnimation(alphaAnimation);
 
-        fabNormalClock.show();
-        fabCustomClock.show();
+        float normalClockInitX = fabNormalClock.getTranslationX();
+        float normalClockInitY = fabNormalClock.getTranslationY();
+        float customClockInitX = fabCustomClock.getTranslationX();
+        float customClockInitY = fabCustomClock.getTranslationY();
+
+        PropertyValuesHolder pvh1 = PropertyValuesHolder.ofFloat("translationX", normalClockInitX, normalClockInitX - 150f);
+        PropertyValuesHolder pvh2 = PropertyValuesHolder.ofFloat("translationY", normalClockInitY, normalClockInitY - 150f);
+        PropertyValuesHolder pvh3 = PropertyValuesHolder.ofFloat("translationX", customClockInitX, customClockInitX + 150f);
+        PropertyValuesHolder pvh4 = PropertyValuesHolder.ofFloat("translationY", customClockInitY, customClockInitY - 150f);
+        ObjectAnimator.ofPropertyValuesHolder(fabNormalClock, pvh1, pvh2).setDuration(400).start();
+        ObjectAnimator.ofPropertyValuesHolder(fabCustomClock, pvh3, pvh4).setDuration(400).start();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fabNormalClock.show();
+                fabCustomClock.show();
+            }
+        }, 100);
 
         fabOpened = true;
     }
 
+    private void closeMenu(View view) {
+        isAnimationEnd = false;
+        ObjectAnimator animator1 = ObjectAnimator.ofFloat(view, "rotation", -135, 20, 0);
+        ObjectAnimator animator2 = ObjectAnimator.ofFloat(view, "scaleX", 0.65f, 1f);
+        ObjectAnimator animator3 = ObjectAnimator.ofFloat(view, "scaleY", 0.65f, 1f);
+        AnimatorSet set = new AnimatorSet();
+        set.setDuration(500);
+        set.playTogether(animator1, animator2, animator3);
+        set.start();
+        set.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                isAnimationEnd = true;
+            }
+        });
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0.8f, 0);
+        alphaAnimation.setDuration(500);
+        maskView.startAnimation(alphaAnimation);
+        maskView.setVisibility(View.GONE);
+
+        float normalClockInitX = fabNormalClock.getTranslationX();
+        float normalClockInitY = fabNormalClock.getTranslationY();
+        float customClockInitX = fabCustomClock.getTranslationX();
+        float customClockInitY = fabCustomClock.getTranslationY();
+
+        PropertyValuesHolder pvh1 = PropertyValuesHolder.ofFloat("translationX", normalClockInitX, normalClockInitX + 150f);
+        PropertyValuesHolder pvh2 = PropertyValuesHolder.ofFloat("translationY", normalClockInitY, normalClockInitY + 150f);
+        PropertyValuesHolder pvh3 = PropertyValuesHolder.ofFloat("translationX", customClockInitX, customClockInitX - 150f);
+        PropertyValuesHolder pvh4 = PropertyValuesHolder.ofFloat("translationY", customClockInitY, customClockInitY + 150f);
+        ObjectAnimator.ofPropertyValuesHolder(fabNormalClock, pvh1, pvh2).setDuration(400).start();
+        ObjectAnimator.ofPropertyValuesHolder(fabCustomClock, pvh3, pvh4).setDuration(400).start();
+
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fabNormalClock.hide();
+                fabCustomClock.hide();
+            }
+        }, 100);
+
+        fabOpened = false;
+    }
+
     private void setupBanner(ViewPager mBanner) {
         MyPagerAdapter adapter = new MyPagerAdapter(getActivity().getSupportFragmentManager());
-        adapter.addFragment(PageFragment.newInstance(1), "1");
-        adapter.addFragment(PageFragment.newInstance(2), "2");
+        adapter.addFragment(new PageFragment(), "1");
+        adapter.addFragment(new PageFragment(), "2");
         mBanner.setAdapter(adapter);
     }
 
     private void setupViewPager(ViewPager mViewPager) {
         MyPagerAdapter adapter = new MyPagerAdapter(getActivity().getSupportFragmentManager());
-        adapter.addFragment(DetailFragment.newInstance(getAsset("book_content.txt")), "内容简介");
-        adapter.addFragment(DetailFragment.newInstance(getAsset("book_author.txt")), "作者简介");
+        adapter.addFragment(new DetailFragment(), "内容简介");
+        adapter.addFragment(new DetailFragment(), "作者简介");
         mViewPager.setAdapter(adapter);
-    }
-
-    private String getAsset(String fileName) {
-        AssetManager am = getResources().getAssets();
-        InputStream is = null;
-        try {
-            is = am.open(fileName, AssetManager.ACCESS_BUFFER);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new Scanner(is).useDelimiter("\\Z").next();
     }
 
 
