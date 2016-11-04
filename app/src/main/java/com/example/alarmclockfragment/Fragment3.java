@@ -18,8 +18,8 @@ import android.widget.Toast;
  * Created by Administrator on 2016/10/31.
  */
 
-public class Fragment2 extends Fragment {
-    private static final String TAG = Fragment2.class.getSimpleName();
+public class Fragment3 extends Fragment {
+    private static final String TAG = Fragment3.class.getSimpleName();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,5 +51,4 @@ public class Fragment2 extends Fragment {
             mToolBar.setElevation(12);
         }
     }
-
 }

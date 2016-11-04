@@ -2,9 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/primary"
+    android:id="@+id/rl_banner"
+    android:paddingTop="80dp"
     android:paddingEnd="24dp"
     android:paddingStart="24dp">
+
 
     <FrameLayout
         android:id="@+id/fl_profile_image"
@@ -16,12 +18,12 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="bottom"
-            android:src="@mipmap/abc" />
+            android:src="@mipmap/test_abc" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/background" />
+            android:src="@mipmap/test_background" />
 
     </FrameLayout>
 

@@ -20,6 +20,9 @@ public class CircleIndicator extends LinearLayout implements OnPageChangeListene
 
     private final static int DEFAULT_INDICATOR_WIDTH = 5;
 
+	
+	
+	
     private ViewPager mViewpager;
 
     private int mIndicatorMargin = -1;

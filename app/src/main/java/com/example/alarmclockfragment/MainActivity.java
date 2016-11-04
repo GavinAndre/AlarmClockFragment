@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+
 import static android.R.attr.tag;
 
 /**
@@ -31,7 +32,9 @@ import static android.R.attr.tag;
 public class MainActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
+
     private TabLayout tabLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         pagerAdapter.addFragment(new AlarmClockFragment());
         pagerAdapter.addFragment(new Fragment2());
-        pagerAdapter.addFragment(new Fragment2());
+        pagerAdapter.addFragment(new Fragment3());
 
         viewPager.setAdapter(pagerAdapter);
 

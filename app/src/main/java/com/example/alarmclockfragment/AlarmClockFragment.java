@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -19,17 +18,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Created by Administrator on 2016/10/28.
@@ -55,6 +53,7 @@ public class AlarmClockFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +63,9 @@ public class AlarmClockFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_alarm_clock, container, false);
+
+        initToolBar(view);
 
         fabAddClock = (FloatingActionButton) view.findViewById(R.id.fab_add_clock);
         fabAddClock.setOnClickListener(new View.OnClickListener() {
@@ -103,6 +104,25 @@ public class AlarmClockFragment extends Fragment {
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(mViewPager);
         return view;
+    }
+
+    private void initToolBar(View view) {
+        Toolbar mToolBar = (Toolbar) view.findViewById(R.id.toolbar);
+        mToolBar.setNavigationIcon(R.drawable.menu);
+        mToolBar.inflateMenu(R.menu.menu1);
+        mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Navigation1", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Toast.makeText(getContext(), "menu1", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
 
     private void openMenu(View view) {
@@ -197,15 +217,16 @@ public class AlarmClockFragment extends Fragment {
 
     private void setupBanner(ViewPager mBanner) {
         MyPagerAdapter adapter = new MyPagerAdapter(getActivity().getSupportFragmentManager());
-        adapter.addFragment(new PageFragment(), "1");
-        adapter.addFragment(new PageFragment(), "2");
+        adapter.addFragment(CharmBannerFragment.newInstance(1), "1");
+        adapter.addFragment(CharmBannerFragment.newInstance(2), "2");
+        adapter.addFragment(CharmBannerFragment.newInstance(3), "3");
         mBanner.setAdapter(adapter);
     }
 
     private void setupViewPager(ViewPager mViewPager) {
         MyPagerAdapter adapter = new MyPagerAdapter(getActivity().getSupportFragmentManager());
-        adapter.addFragment(new DetailFragment(), "内容简介");
-        adapter.addFragment(new DetailFragment(), "作者简介");
+        adapter.addFragment(new AlarmClockListFragment(), "普通闹铃");
+        adapter.addFragment(new AlarmClockListFragment(), "定制闹铃");
         mViewPager.setAdapter(adapter);
     }
 
