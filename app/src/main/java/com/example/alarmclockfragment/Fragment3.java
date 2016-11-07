@@ -33,17 +33,17 @@ public class Fragment3 extends Fragment {
         Toolbar mToolBar = (Toolbar) view.findViewById(R.id.toolbar);
 //        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolBar.setNavigationIcon(R.drawable.menu);
-        mToolBar.inflateMenu(R.menu.menu2);
+        mToolBar.inflateMenu(R.menu.menu3);
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Navigation2", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Navigation3", Toast.LENGTH_SHORT).show();
             }
         });
         mToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Toast.makeText(getContext(), "menu2", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "menu3", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });

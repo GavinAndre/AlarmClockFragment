@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,7 +19,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="exitUntilCollapsed|snap">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -33,25 +34,28 @@
                     android:id="@+id/banner"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
-                    android:fitsSystemWindows="true" />
+                    android:fitsSystemWindows="true"/>
 
                 <com.example.alarmclockfragment.CircleIndicator
                     android:id="@+id/pager_indicator"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:layout_marginBottom="20dp" />
+                    android:layout_marginBottom="20dp"/>
 
             </FrameLayout>
 
+            <!--CollapsingToolbarLayout+toolbar做色差效果要把-->
+            <!--toolbar背景设为透明才有水波纹效果-->
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
+                android:background="@android:color/transparent"
                 android:paddingTop="25dp"
                 android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -68,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabGravity="fill"
-            app:tabMode="fixed" />
+            app:tabMode="fixed"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -77,14 +81,14 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
 
             <View
                 android:id="@+id/mask"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#ffff"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
         </FrameLayout>
 
@@ -97,7 +101,7 @@
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
         android:src="@drawable/plus"
-        app:fabSize="normal" />
+        app:fabSize="normal"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_normal_clock"
@@ -107,7 +111,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/plus"
         android:visibility="gone"
-        app:fabSize="normal" />
+        app:fabSize="normal"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_custom_clock"
@@ -117,7 +121,7 @@
         android:layout_margin="16dp"
         android:src="@drawable/plus"
         android:visibility="gone"
-        app:fabSize="normal" />
+        app:fabSize="normal"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

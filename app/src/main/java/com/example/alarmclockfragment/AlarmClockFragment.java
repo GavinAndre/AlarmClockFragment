@@ -216,7 +216,8 @@ public class AlarmClockFragment extends Fragment {
     }
 
     private void setupBanner(ViewPager mBanner) {
-        MyPagerAdapter adapter = new MyPagerAdapter(getActivity().getSupportFragmentManager());
+        //fragment嵌套fragment需要用getChildFragmentManager()来获取FragmentManager
+        MyPagerAdapter adapter = new MyPagerAdapter(getChildFragmentManager());
         adapter.addFragment(CharmBannerFragment.newInstance(1), "1");
         adapter.addFragment(CharmBannerFragment.newInstance(2), "2");
         adapter.addFragment(CharmBannerFragment.newInstance(3), "3");
@@ -224,7 +225,7 @@ public class AlarmClockFragment extends Fragment {
     }
 
     private void setupViewPager(ViewPager mViewPager) {
-        MyPagerAdapter adapter = new MyPagerAdapter(getActivity().getSupportFragmentManager());
+        MyPagerAdapter adapter = new MyPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new AlarmClockListFragment(), "普通闹铃");
         adapter.addFragment(new AlarmClockListFragment(), "定制闹铃");
         mViewPager.setAdapter(adapter);
